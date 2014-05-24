@@ -2,6 +2,12 @@ body{
 	background: rgba(230,230,230,0.7);
 	font-family: verdana;
 }
+footer{
+	background: rgba(100,100,100,0.9);
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+}
 .resultado{
 	position: absolute;
 	background: rgba(69,139,244,0.7);
@@ -28,4 +34,22 @@ body{
 	right: 0;
 	bottom: 0;
 	display: none;
+}
+footer a{
+	text-decoration: none;
+	color: orange;
+	-ms-transition: all 0.15s ease-in;
+	-moz-transition: all 0.15s ease-in;
+	-webkit-transition: all 0.15s ease-in;
+	-o-transition: all 0.15s ease-in;
+	transition: all 0.15s ease-in;
+}
+footer a:hover{
+	color: #eee;
+	-ms-transition: all 0.15s ease-in;
+	-moz-transition: all 0.15s ease-in;
+	-webkit-transition: all 0.15s ease-in;
+	-o-transition: all 0.15s ease-in;
+	transition: all 0.15s ease-in;
+	transition: all 0.3s ease-in;
 }
