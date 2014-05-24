@@ -1,3 +1,5 @@
+// con esto se desactiva el boton derecho del raton
+document.oncontextmenu = function(){return false;};
 
 //aciertos y equivocaciones
 var aciertos=0;
@@ -6,14 +8,17 @@ var fallos=0;
 //variable para comprobar si ya han respondido al test
 var booltest=false;
 
-// var para el resultado
+// var para el resultado en texto se le puede poner lo que se quiera para que salga en el div de respuesta al final del todo.   El atributo texto,si no se necesita se puede qutar el string que va y dejarlo solo con '', asi no saldrá nada
 var resultado={
 	'titulo':'Resultados del test', 
 	'subtitulo': 'El resultado de su test ha sido: ', 
 	'porcentaje': '', 
-	'texto':'Gracias'
+	'nota':'', 
+	'texto':'aqui va el texto, si no se necesita, se puede quitar sin problema'
 }
+//variable que almacena el div en el que se mostrará el resultado
 var divRespuestaVar = document.getElementById('resultado');
+
 //array preguntas, respuestas y formularios(los de las preguntas)
 var preguntas=[];
 var respuestas=[];
@@ -24,11 +29,11 @@ var enviar= document.getElementById('boton');
 enviar.addEventListener('click', enviarFormulario,false);
 
 
-//funciones
+/**************************************
 
+funciones
 
-
-
+************************************/
 //asignar las respuestas obtenidas al array respuestas
 function rellenarespuestas(){
 	
@@ -43,7 +48,7 @@ function rellenarespuestas(){
 }
 
 // asignar las opciones buenas a las preguntas
-function rellenapregunas(){
+function rellenapreguntas(){
 	preguntas[0].a=true;
 	preguntas[1].a=true;
 	preguntas[1].b=true;
@@ -59,8 +64,8 @@ function rellenapregunas(){
 
 }
 
-//llenar los arrays todo con false
-function creaArrays(){
+//pobla los arrays todo con false
+function poblarArrays(){
 var longitud=document.forms.length;
 	for(i=0 ; i < longitud ; i++){
 		preguntas.push({
@@ -81,7 +86,7 @@ var longitud=document.forms.length;
 }
 
 
-//comparar dos objetos
+//comparar una pregunta con una respuesta, si se ha respondido correctamente se añade un acierto a la var global y si se ha respondido algo pero mal añade uno a la val fallos, ademas por si hubiera hecho falta devuelve true si hay acierto y false si hay fallo
 function comparar(preg,resp){
 	var retorno;
 	if( ((resp.a==preg.a) && (resp.b==preg.b) && (resp.c==preg.c) && (resp.d==preg.d) && (resp.e==preg.e)) && ((resp.a==true) || (resp.b==true) || (resp.c==true) || (resp.d==true) || (resp.e==true)) ){
@@ -97,40 +102,57 @@ function comparar(preg,resp){
 	return retorno;
 }
 
+// comprueba que no se haya contestado el test ya y si no es asi, compara las preguntas con las respuestas, ademas, quita el evento al boton, para que no se pueda volver a enviar
 function comprobarRespuestas(){
 
 	if(!booltest){
-
-	rellenarespuestas();
-	
+	rellenarespuestas();	
 	for(i= 0 ; i< formularios.length ; i++){
 		comparar(preguntas[i], respuestas[i]);
-
 	}
-	booltest=true;
+	booltest=true; // con esto se desactiva la posibilidad de volver a hacer el test, solo se podrá si se recarga la pagina
 	enviar.removeEventListener('click',enviarFormulario,false);
-	console.log("aciertos: " + aciertos + " fallos: " + fallos);
-	console.log("enviando forrmulario");
-	console.log("preguntas");
-	console.log(preguntas);
-	console.log("respuestas");
-	console.log(respuestas);
 	}else{
 		alert("Usted ya ha contestado al test");
 	}
 }
 
+//establece la puntuacion del test y al div de la respuesta le dirá la nota con la que aparecerá dependiendo del porcentaje de acierto
 function puntuacion(){
 	var x =( ((aciertos - (fallos/2))*100) / formularios.length).toFixed(2);
-
+	
+	switch(true){
+		case (x<50):
+		resultado.nota="Suspenso";
+		break;
+		case (x >= 50 && x<60):
+		resultado.nota="Aprobado";
+		break;
+		case (x >= 60 && x<70):
+		resultado.nota="Bien";
+		break;
+		case (x >= 70 && x<90):
+		resultado.nota="Notable";
+		break;
+		case (x >= 90 && x<100):
+		resultado.nota="Sobresaliente";
+		break;
+		case (x==100):
+		resultado.nota="Matricula de Honor";
+		break;
+		default:
+		x="00";
+		resultado.nota='"Disculple, ha habido un error"';
+		console.log("esta pasando por default del switch de puntuacion");
+	}
 	resultado.porcentaje= x.toString();
-	console.log(resultado.porcentaje);
-	console.log(x);
 }
 
+//llenar y hacer aparecer el div cpn el resultado del test
 function divRespuesta(){
 divRespuestaVar.innerHTML='<h1>' + resultado.titulo + '</h1>' +
-'<p> ' +resultado.subtitulo  + resultado.porcentaje + '%</p>'+'<p> ' +resultado.texto +'</p>'    ; 
+'<p> ' +resultado.subtitulo  + resultado.porcentaje + '%</p>'+'<p> ' + 
+'Su nota es: '+ resultado.nota +'</p>'+'<p> ' + resultado.texto +'</p>'   ; 
 
 $(document).ready(function(){
 
@@ -152,20 +174,21 @@ $(document).ready(function() {
 $(window).resize();
  
 });
-	//document.getElementById('sombra').style.display="inline";
 }
 
+//funcion para enviar el formulario (funcionara cuando click en boton enviar)
 function enviarFormulario(){
-	
 comprobarRespuestas();
 puntuacion();
 divRespuesta();	
 }
-document.oncontextmenu = function(){return false;}
+
+
+//añadimos evento load a window y ejecutamos funcion init()
 window.addEventListener('load',init, false);
 
+//funcion init que se ejecutará cuando se carge el html
 function init(){
-//alert("xxx");
-creaArrays();
-rellenapregunas();
+poblarArrays();
+rellenapreguntas();
 }
