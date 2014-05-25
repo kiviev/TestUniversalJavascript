@@ -58,6 +58,13 @@ footer a:hover{
 }
 .contenedor{
 	max-width: 70%;
-	background: red;
+	background: rgba(0,0,0,0.2);
 	margin:  1em auto;
+}
+.pre{	
+	padding: 0 1em;
+}
+
+.enunciado{	
+	padding: 0 1em;
 }
