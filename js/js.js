@@ -122,6 +122,10 @@ function puntuacion(){
 	var x =( ((aciertos - (fallos/2))*100) / formularios.length).toFixed(2);
 	
 	switch(true){
+		case (x<0):
+		resultado.nota="Suspenso";
+		x=0;
+		break;
 		case (x<50):
 		resultado.nota="Suspenso";
 		break;
